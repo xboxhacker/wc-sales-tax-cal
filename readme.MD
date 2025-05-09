@@ -111,7 +111,6 @@ Yes, the surtax rate field accepts 0%, and the Surtax Due will be calculated as 
 - Added notification start day selector (1–28).
 - Changed notification text to H3.
 - Allowed 0% surtax rate.
-- Updated author to "William Hare & Grok3.0".
 - Added plugin site link: https://github.com/xboxhacker/.
 - Added savable notes section.
 - Fixed Surtax Due calculation: Taxable Amount × (surtax rate / 100).
