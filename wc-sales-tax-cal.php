@@ -219,7 +219,7 @@ add_action( 'admin_enqueue_scripts', 'wc_sales_tax_cal_enqueue_scripts' );
 
 function wc_sales_tax_cal_enqueue_scripts() {
     wp_enqueue_script( 'wc-sales-tax-cal-script', plugin_dir_url( __FILE__ ) . 'assets/script.js', array( 'jquery' ), '1.0', true );
-    wp_localize_script( 'wc_sales_tax_cal-script', 'wcSalesTaxCal', array(
+    wp_localize_script( 'wc-sales-tax-cal-script', 'wcSalesTaxCal', array(
         'ajax_url' => admin_url( 'admin-ajax.php' ),
         'nonce' => wp_create_nonce( 'wc_sales_tax_cal_dismiss' ),
     ) );
