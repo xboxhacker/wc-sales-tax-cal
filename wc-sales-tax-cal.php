@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WC Sales Tax Cal
-Version: 1.6
+Version: 1.7
 Description: Calculate sales tax figures for WooCommerce. | Plugin Site: https://github.com/xboxhacker/
 Author: William Hare & Grok3.0
 */
@@ -88,16 +88,17 @@ function wc_sales_tax_cal_page() {
                 $gross_sales = 0;
                 $tax_due = 0;
 
-                // Sum up gross sales and tax due
+                // Sum up gross sales (excluding tax) and tax due
                 foreach ( $orders as $order ) {
-                    $gross_sales += $order->get_total();
+                    $gross_sales += $order->get_total() - $order->get_total_tax();
                     $tax_due += $order->get_total_tax();
                 }
 
                 // Perform calculations
-                $taxable_amount = $tax_due / ( $tax_rate / 100 );
-                $exempt_sales = $gross_sales - $taxable_amount - $tax_due;
-                $surtax_due = $surtax_rate > 0 ? $taxable_amount * ( $surtax_rate / 100 ) : 0;
+                $combined_rate = $tax_rate + $surtax_rate;
+                $taxable_amount = $combined_rate > 0 ? $tax_due / ($combined_rate / 100) : 0;
+                $exempt_sales = $gross_sales - $taxable_amount;
+                $surtax_due = $taxable_amount * ($surtax_rate / 100);
 
                 // Display results
                 echo '<h2>Results for ' . date( 'F Y', mktime(0, 0, 0, $month, 1, $year) ) . '</h2>';
@@ -218,7 +219,7 @@ add_action( 'admin_enqueue_scripts', 'wc_sales_tax_cal_enqueue_scripts' );
 
 function wc_sales_tax_cal_enqueue_scripts() {
     wp_enqueue_script( 'wc-sales-tax-cal-script', plugin_dir_url( __FILE__ ) . 'assets/script.js', array( 'jquery' ), '1.0', true );
-    wp_localize_script( 'wc-sales-tax-cal-script', 'wcSalesTaxCal', array(
+    wp_localize_script( 'wc_sales_tax_cal-script', 'wcSalesTaxCal', array(
         'ajax_url' => admin_url( 'admin-ajax.php' ),
         'nonce' => wp_create_nonce( 'wc_sales_tax_cal_dismiss' ),
     ) );
